@@ -3,6 +3,7 @@
   <testsuites>
     <testsuite name="Version tools">
       <file>parserTest.php</file>
+      <file>writerTest.php</file>
     </testsuite>
   </testsuites>
 </phpunit>

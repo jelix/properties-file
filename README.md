@@ -4,7 +4,8 @@ Properties files are like Java Properties file. The implemented format is using
 to store locales for an application made with [Jelix](https://jelix.org), 
 a PHP Framework.
 
-# installation
+installation
+============
 
 You can install it from Composer. In your project:
 
@@ -12,15 +13,18 @@ You can install it from Composer. In your project:
 composer require "jelix/propertiesfile"
 ```
 
-# Usage
+Usage
+=====
 
-You have two classes: `Properties` which is a container for key/value pairs.
-And a `Reader` to  parse a properties file.
+You have two classes: `Properties` which is a container for key/value pairs,
+a `Reader` to  parse a properties file and a `Writer` to write properties into
+a file.
 
 ```php
 
 use \Jelix\PropertiesFile\Properties;
 use \Jelix\PropertiesFile\Parser;
+use \Jelix\PropertiesFile\Writer;
 
 $properties = new Properties();
 
@@ -28,17 +32,88 @@ $reader = new Parser();
 $reader->parseFromFile('file.properties', $properties);
 
 $value = $properties->get('a_key');
-$value = $properties->a_key;
 $value = $properties['a_key'];
 
 $properties->set('a_key', 'new_value');
-$properties->a_key = 'new_value';
 $properties['a_key'] = 'new_value';
+
+$writer = new Writer();
+$writer->writeToFile($properties, 'file.properties');
+
+// with a limit of line length (default is 120)
+$writer->writeToFile($properties, 'file.properties', 
+                    array("lineLength"=>80));
 
 ```
 
-# History
+History
+=======
 
 The parser is based on a class, jBundle coming from the [Jelix Framework](http://jelix.org)
 until Jelix 1.6, and has been released in 2018 into a separate repository as Jelix\PropertiesFile\Parser.
 
+Format
+======
+
+The file content structure is quite simple. It's basically a `key=string`
+structure, with some improvements. 
+
+You can't use double and single quotes to delimit your strings, new lines do this.
+
+Keys can contain characters `a` to `z` (lowercase/uppercase), numbers and
+characters `_`, `-`, `.`.
+
+Here is an example of file:
+
+<code ini>
+title.offlineElements = elements to check
+title.onlineElements = online elements
+buttons.save = Save
+buttons.ok=Ok
+</code>
+
+Multi line
+----------
+
+If the text is long and you want to write it in several lines, you can type an
+anti-slash `\` at the end of each line (excepted the last one of the text), to tell
+the parser to continue reading the translated string.
+
+<code ini>
+intro=this is a very very\
+long text in\
+several lines
+message=this is a regular line
+</code>
+
+However, it doesn't insert a line break in the displayed string. If you want to
+insert a real line break, use `\n` or `\r` (`\r\n` on windows, `\n` on linux, 
+`\r` on macs):
+
+<code ini>
+intro=this is a very very \
+long text in\nseveral lines, but in\n one line\nin the source
+</code>
+
+Comments
+--------
+
+You can also put some comments. They have to begin with a `#`. When the parser sees
+`#`, the rest of the line is ignored. A comment can be at the beginning of a line,
+or in the middle of a line, or at the end of the line. If you want to use a `#` in a
+value, you have to escape it with an anti-slash: `\#`.
+
+Whitespaces
+-----------
+
+Whitespaces before and after a value are ignored. If you want to put a value equal
+to a space, you have to use `\s`.
+
+<code ini>
+nospace= #this is using a regular space
+space= \s#this is using a \s space
+</code>
+
+The value of `space` will be `' '`, and the value of `nospace`, an empty string.
+
+You can also use `\S` to insert an 'unbreakable' space.
