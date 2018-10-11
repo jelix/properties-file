@@ -74,31 +74,6 @@ class Properties implements \ArrayAccess
         $this->properties[$key] = $value;
     }
 
-    /**
-     * Property getter, allowing to access to property like a property of an object
-     *
-     * @param string $key
-     * @return null|string
-     */
-    public function __get($key)
-    {
-        if (isset($this->properties[$key])) {
-            return $this->properties[$key];
-        }
-        return null;
-    }
-
-    /**
-     * Set a property, like a property of an object
-     *
-     * @param string $key
-     * @param string $value
-     */
-    public function __set($key, $value)
-    {
-        $this->properties[$key] = $value;
-    }
-
     // --------------------------- ArrayAccess interface
 
     public function offsetSet($key, $value)

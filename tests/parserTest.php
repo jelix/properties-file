@@ -27,8 +27,8 @@ class parserTest extends PHPUnit_Framework_TestCase
             array('test_A.properties', []),
             array('test_B.properties', array("aaa"=>"bbb","ccc"=>"")),
             array('test_C.properties', array("aaa"=>"bbb","ccc"=>"ddd")),
-            array('test_D.properties', array("module.description"=>"Tests unitaires jelix")),
-            array('test_E.properties', array("module.description"=>"Tests unitaires jelix")),
+            array('test_D.properties', array("module.description"=>"Tests\nunitaires jelix")),
+            array('test_E.properties', array("module.description"=>"Tests\ \\\\unitaires jelix")),
             array('test_F.properties', array("module.description"=>"Tests unitaires jelix" )),
             array('test_G.properties', array(
                 "module.description" => "Tests unitaires jelix",
@@ -42,7 +42,8 @@ class parserTest extends PHPUnit_Framework_TestCase
                 "jj" => "truc"
             )),
             array('test_H.properties', array("module.description" => "Tests unitaires # jelix", "ooo" => "bbbb",)),
-            array('test_I.properties',  array("module.description" => "Tests unitaires # jelix", "ooo" => "bbbb",)),
+            array('test_I.properties',  array("module.description" => "Tests unitaires # jelix",
+                "ooo" => " bb bb  ",)),
             array('test_J.properties', array(
                 "text.key" => "bug 639 there shouldn't have a notice during the parsing of this property ",
                 "text.key2" => "same problem but with spaces at the end of the last line ",
@@ -55,17 +56,12 @@ class parserTest extends PHPUnit_Framework_TestCase
      * @dataProvider getPropertiesContent
      */
     public function testParserFiles($file, $expected){
-        try {
-            $parser = new Parser ();
-            $props = new Properties();
-            $parser->parseFromFile(__DIR__.'/assets/'.$file, $props);
+        $parser = new Parser ();
+        $props = new Properties();
+        $parser->parseFromFile(__DIR__.'/assets/'.$file, $props);
 
-            $strings = $props->getAllProperties();
-            $this->assertEquals($expected, $strings);
-        }
-        catch(Exception $e){
-            self::fail('test failed because of exception : ['.$e->getCode().'] '.$e->getMessage());
-        }
+        $strings = $props->getAllProperties();
+        $this->assertEquals($expected, $strings);
     }
 
 }
