@@ -10,7 +10,7 @@ installation
 You can install it from Composer. In your project:
 
 ```
-composer require "jelix/propertiesfile"
+composer require "jelix/properties-file"
 ```
 
 Usage

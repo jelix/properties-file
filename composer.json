@@ -1,5 +1,5 @@
 {
-    "name": "jelix/propertiesfile",
+    "name": "jelix/properties-file",
     "type": "library",
     "description": "classes to read and write properties files. Format is similar to Java properties files.",
     "keywords": ["properties", "files"],
