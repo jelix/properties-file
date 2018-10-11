@@ -1,0 +1,10 @@
+TAGS
+.DS_Store
+*.komodoproject
+.komodotools
+vendor/
+composer.lock
+tests/temp/*
+!tests/temp/.dummy
+.idea
+.php_cs.cache
