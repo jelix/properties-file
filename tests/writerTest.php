@@ -19,7 +19,7 @@ class writerTest extends PHPUnit_Framework_TestCase
                 ),
                 "aaa = bbb\n".
                 "ccc = \n",
-                80
+                array("lineLength"=>80)
             ),
             array(
                 array(
@@ -28,7 +28,7 @@ class writerTest extends PHPUnit_Framework_TestCase
                 ),
                 "aaa = Lorem \\#Ipsum is\\nsimply dummy text\\s\n".
                 "ccc = ddd\n",
-                80
+                array("lineLength"=>80)
             ),
             array(
                 array(
@@ -45,7 +45,24 @@ class writerTest extends PHPUnit_Framework_TestCase
                 "hh = \\s  \\s\n".
                 "ii = \\s  \\S bidule\n".
                 "jj = truc\\s\n",
-                80
+                array("lineLength"=>80)
+            ),
+            array(
+                array(
+                    "html" => "lorem <ipsum>&#65; <html> &quote; test &gt;",
+                    "ee" => " ",
+                    "ff" => "  # other",
+                    "hh" => "    ",
+                    "ii" => "   ".utf8_encode(chr(160)).' bidule',
+                    "jj" => "truc "
+                ),
+                "html = lorem <ipsum>&\\#65; <html> &quote; test &gt;\n".
+                "ee = \n".
+                "ff = \\s \\# other\n".
+                "hh = \n".
+                "ii = \\s  \\S bidule\n".
+                "jj = truc\n",
+                array("lineLength"=>80, "removeTrailingSpace" => true)
             ),
             array(
                 array(
@@ -55,19 +72,21 @@ class writerTest extends PHPUnit_Framework_TestCase
                 " dolor sit amet, consectetur a\\\n".
                 "dipiscing elit.\n".
                 "exact.max.length = Lorem ipsum\n",
-                30
+                array("lineLength"=>30)
             ),
             array(
                 array(
                     "long.description" => "Lorem ipsu#m dolor \nsit amet, consectetur adipiscing elit.",
                     "exact.max.length" => "Lorem i#psum"
                 ),
+                "# This is \n".
+                "# a header comment\n".
                 "long.description = Lorem ipsu\\#\\\n".
                 "m dolor \\nsit amet, consectetu\\\n".
                 "r adipiscing elit.\n".
                 "exact.max.length = Lorem i\\#ps\\\n".
                 "um\n",
-                30
+                array("lineLength"=>30, "headerComment"=> "This is \na header comment")
             ),
         );
     }
@@ -75,10 +94,10 @@ class writerTest extends PHPUnit_Framework_TestCase
     /**
      * @dataProvider getPropertiesContent
      */
-    public function testWriterString($properties, $expected, $linelength){
+    public function testWriterString($properties, $expected, $options){
         $props = new Properties($properties);
         $writer = new Writer ();
-        $result = $writer->writeToString($props, array("lineLength"=>$linelength));
+        $result = $writer->writeToString($props, $options);
 
         $this->assertEquals($expected, $result);
     }

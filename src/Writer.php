@@ -13,7 +13,8 @@ class Writer {
     const DEFAULT_OPTIONS = array(
         "lineLength" => 120,
         "spaceAroundEqual" => true,
-        "headerComment" => ""
+        "headerComment" => "",
+        "removeTrailingSpace" => false
     );
 
     function writeToFile(Properties $properties, $fileName, $options = array()) {
@@ -60,11 +61,17 @@ class Writer {
         foreach($properties->getIterator() as $key => $value) {
             $line = $key . $equal;
 
+
             $value = mb_ereg_replace("#", "\\#", $value);
             $value = mb_ereg_replace(utf8_encode(chr(160)), "\\S", $value);
             $value = mb_ereg_replace("\n", "\\n", $value);
+            if ($options["removeTrailingSpace"]) {
+                $value = rtrim($value, " ");
+            }
+            else {
+                $value = mb_ereg_replace(" $", "\\s", $value);
+            }
             $value = mb_ereg_replace("^ ", "\\s", $value);
-            $value = mb_ereg_replace(" $", "\\s", $value);
 
             $startLen = mb_strlen($line);
             $valueLen = mb_strlen($value);
