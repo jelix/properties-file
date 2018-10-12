@@ -10,11 +10,14 @@ namespace Jelix\PropertiesFile;
 
 class Writer {
 
+    const DEFAULT_OPTIONS = array(
+        "lineLength" => 120,
+        "spaceAroundEqual" => true
+    );
+
     function writeToFile(Properties $properties, $fileName, $options = array()) {
 
-        $options = array_merge(array(
-            "lineLength" => 120
-        ), $options);
+        $options = array_merge(self::DEFAULT_OPTIONS, $options);
 
         $f = @fopen($fileName, 'w');
 
@@ -32,9 +35,7 @@ class Writer {
 
     function writeToString(Properties $properties, $options = array()) {
 
-        $options = array_merge(array(
-            "lineLength" => 120
-        ), $options);
+        $options = array_merge(self::DEFAULT_OPTIONS, $options);
 
         $o = new \StdClass;
         $o->content = '';
@@ -50,7 +51,12 @@ class Writer {
     protected function writeContent(callable $writer, Properties $properties, $options) {
 
         foreach($properties->getIterator() as $key => $value) {
-            $line = $key . ' = ';
+            if ($options["spaceAroundEqual"]) {
+                $line = $key . ' = ';
+            }
+            else {
+                $line = $key . '=';
+            }
 
             $value = mb_ereg_replace("#", "\\#", $value);
             $value = mb_ereg_replace(utf8_encode(chr(160)), "\\S", $value);
