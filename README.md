@@ -46,6 +46,14 @@ $writer->writeToFile($properties, 'file.properties',
 
 ```
 
+Options for the writer: 
+
+- `lineLength`: maximum length of a line. If the string length is higher, it will be splitted. (default: 120)
+- `spaceAroundEqual`: to add or not space around the equal sign (boolean, default: true)
+- `headerComment`: to add comment as header (string, default: empty string)
+- `removeTrailingSpace`: to remove trailing space on values (boolean, default: false)
+
+
 History
 =======
 
