@@ -12,7 +12,8 @@ class Writer {
 
     const DEFAULT_OPTIONS = array(
         "lineLength" => 120,
-        "spaceAroundEqual" => true
+        "spaceAroundEqual" => true,
+        "headerComment" => ""
     );
 
     function writeToFile(Properties $properties, $fileName, $options = array()) {
@@ -50,13 +51,14 @@ class Writer {
 
     protected function writeContent(callable $writer, Properties $properties, $options) {
 
+        if ($options["headerComment"]) {
+            $writer('# '.str_replace("\n", "\n# ",$options["headerComment"])."\n");
+        }
+
+        $equal = ($options["spaceAroundEqual"]? ' = ': '=');
+
         foreach($properties->getIterator() as $key => $value) {
-            if ($options["spaceAroundEqual"]) {
-                $line = $key . ' = ';
-            }
-            else {
-                $line = $key . '=';
-            }
+            $line = $key . $equal;
 
             $value = mb_ereg_replace("#", "\\#", $value);
             $value = mb_ereg_replace(utf8_encode(chr(160)), "\\S", $value);
