@@ -69,10 +69,31 @@ class writerTest extends PHPUnit_Framework_TestCase
                     "long.description" => "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
                     "exact.max.length" => "Lorem ipsum"),
                 "long.description = Lorem ipsum\\\n".
-                " dolor sit amet, consectetur a\\\n".
-                "dipiscing elit.\n".
+                "dolor sit amet, consectetur ad\\\n".
+                "ipiscing elit.\n".
                 "exact.max.length = Lorem ipsum\n",
-                array("lineLength"=>30)
+                array("lineLength"=>30, "cutOnlyAtSpace"=>false)
+            ),
+            array(
+                array(
+                    "long.description" => "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+                    "exact.max.length" => "Lorem ips",
+                    "big.first.word" => "Loremipsumdolor sit amet, consectetur dipiscing elit.",
+                    "with.long.space" => "Praesent a quam a mauris   tempus   placerat. Sed bibendum     mattis erat, quis consequat ",
+                ),
+                "long.description = Lorem\\\n".
+                "ipsum dolor sit amet,\\\n".
+                "consectetur adipiscing elit.\n".
+                "exact.max.length = Lorem ips\n".
+                "big.first.word = Loremipsumdolor\\\n".
+                "sit amet, consectetur\\\n".
+                "dipiscing elit.\n".
+                "with.long.space = Praesent a\\\n".
+                "quam a mauris   tempus\\\n".
+                "\\s placerat. Sed bibendum   \\s\\\n".
+                "mattis erat, quis consequat\\s\n"
+                ,
+                array("lineLength"=>28, "cutOnlyAtSpace"=>true)
             ),
             array(
                 array(
@@ -86,7 +107,7 @@ class writerTest extends PHPUnit_Framework_TestCase
                 "r adipiscing elit.\n".
                 "exact.max.length = Lorem i\\#ps\\\n".
                 "um\n",
-                array("lineLength"=>30, "headerComment"=> "This is \na header comment")
+                array("lineLength"=>30, "cutOnlyAtSpace"=>false, "headerComment"=> "This is \na header comment")
             ),
         );
     }

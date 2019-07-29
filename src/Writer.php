@@ -14,7 +14,8 @@ class Writer {
         "lineLength" => 120,
         "spaceAroundEqual" => true,
         "headerComment" => "",
-        "removeTrailingSpace" => false
+        "removeTrailingSpace" => false,
+        "cutOnlyAtSpace" => true
     );
 
     function writeToFile(Properties $properties, $fileName, $options = array()) {
@@ -68,63 +69,79 @@ class Writer {
             if ($options["removeTrailingSpace"]) {
                 $value = rtrim($value, " ");
             }
-            else {
-                $value = mb_ereg_replace(" $", "\\s", $value);
-            }
-            $value = mb_ereg_replace("^ ", "\\s", $value);
 
             $startLen = mb_strlen($line);
             $valueLen = mb_strlen($value);
             if ($valueLen + $startLen > $options['lineLength']) {
-                $line .= $this->chunkSplit($value,
+                $value = $this->chunkSplit($value,
                     $options['lineLength'] - $startLen,
-                    $options['lineLength']);
+                    $options['lineLength'],
+                    $options['cutOnlyAtSpace']);
             }
-            else {
-                $line .= $value;
-            }
+            $value = mb_ereg_replace(" $", "\\s", $value);
+            $value = mb_ereg_replace("^ ", "\\s", $value);
+            $line .= $value;
 
             $writer($line."\n");
         }
     }
 
 
-    protected function chunkSplit($string, $firstLineLength, $lineLength) {
+    protected function chunkSplit($string, $firstLineLength, $lineLength, $cutOnlyAtSpace) {
         $valueLen = mb_strlen($string);
         $start = 0;
         $line = "";
         if ($valueLen > $firstLineLength) {
-            $cut = mb_strcut($string, $start, $firstLineLength);
-            if (substr($cut, -1) == '\\') {
-                $line .= mb_strcut($string, $start, $firstLineLength+1)."\\\n";
-                $valueLen -= $firstLineLength + 1;
-                $start += $firstLineLength + 1;
-            }
-            else {
-                $line .= $cut."\\\n";
-                $valueLen -= $firstLineLength;
-                $start += $firstLineLength;
-            }
+            list ($cut, $cutLength) = $this->cutString($string, $start, $firstLineLength, $cutOnlyAtSpace);
+            $line .= $cut;
+            $valueLen -= $cutLength;
+            $start += $cutLength;
         }
 
         while ($valueLen > $lineLength) {
-            $cut = mb_strcut($string, $start, $lineLength);
-            if (substr($cut, -1) == '\\') {
-                $line .= mb_strcut($string, $start, $lineLength+1)."\\\n";
-                $valueLen -= $lineLength + 1;
-                $start += $lineLength + 1;
-            }
-            else {
-                $line .= $cut."\\\n";
-                $valueLen -= $lineLength;
-                $start += $lineLength;
-            }
+            list ($cut, $cutLength) = $this->cutString($string, $start, $lineLength, $cutOnlyAtSpace);
+            $line .= $cut;
+            $valueLen -= $cutLength;
+            $start += $cutLength;
         }
         if ($valueLen > 0) {
             $line .= mb_strcut($string, $start, $valueLen);
         }
-        return $line;
+        $line = preg_replace('/(\\n )/mu', "\n\\s", $line);
+        return preg_replace('/( \\\\\\n)/mu', "\\s\\\n", $line);
     }
 
+    protected function cutString($string, $start, $lineLength, $cutOnlyAtSpace) {
+
+        $cut = mb_strcut($string, $start, $lineLength);
+        $length = mb_strlen($cut);
+
+        if ($cutOnlyAtSpace) {
+            $cut2 = preg_replace('/(\s+?\S+)?$/u', '', mb_strcut($string, $start, $lineLength+1));
+            $length2 = mb_strlen($cut2);
+            if ($length < $length2) {
+                $lastchar = mb_strcut($string, $start+$lineLength, 1);
+                if ($lastchar != ' ') {
+                    $cut = $cut2.preg_replace('/^(\S+)(.*)/u', '${1}', mb_strcut($string, $start+$lineLength+1));
+                    $length = mb_strlen($cut);
+                }
+            }
+            else if ($length > $length2) {
+                $cut = $cut2;
+                $length = $length2;
+            }
+        }
+        else {
+            if (substr($cut, -1) == '\\') { //escape character
+                $cut = mb_strcut($string, $start, $lineLength+1);
+                $length = $lineLength + 1;
+            }
+        }
+
+        if (mb_strcut($string, $start+$length, 1) == ' ') {
+            $length++;
+        }
+        return array($cut."\\\n", $length);
+    }
 
 }
