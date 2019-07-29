@@ -1,6 +1,13 @@
 Changelog
 ==========
 
+1.2 (2019-07-29)
+----------------
+
+- new option for the writer: `cutOnlyAtSpace`.
+  Set it to false to cut line by ignoring words
+
+
 1.1 (2018-10-12)
 ----------------
 
