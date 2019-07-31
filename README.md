@@ -53,6 +53,7 @@ Options for the writer:
 - `spaceAroundEqual`: to add or not space around the equal sign (boolean, default: true)
 - `headerComment`: to add comment as header (string, default: empty string)
 - `removeTrailingSpace`: to remove trailing space on values (boolean, default: false)
+- `encoding`: encoding of values to write. (string, default: "UTF-8")
 
 History
 =======

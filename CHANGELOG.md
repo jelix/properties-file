@@ -1,6 +1,11 @@
 Changelog
 ==========
 
+1.2.1 (2019-07-31)
+------------------
+
+- fix split of long line and support of encoding
+
 1.2 (2019-07-29)
 ----------------
 
