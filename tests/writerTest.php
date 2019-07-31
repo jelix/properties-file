@@ -109,6 +109,25 @@ class writerTest extends PHPUnit_Framework_TestCase
                 "um\n",
                 array("lineLength"=>30, "cutOnlyAtSpace"=>false, "headerComment"=> "This is \na header comment")
             ),
+            array(
+                array(
+                    "super.long" => "<p>Un email vous a été envoyé à l'adresse indiquée. Si vous ne le voyez pas ".
+                        "dans votre boite au lettre d'ici quelques minutes, vérifiez votre dossier de".
+                        " spam. Si vous n'avez pas reçu le mail, peut-être que le nom d'utilisateur ".
+                        "et l'adresse que vous avez donné ne sont pas valides. Contactez ".
+                        "l'administrateur du site web.</p> <p>Cet email contient un lien vers une ".
+                        "page qui vous permettra de changer de mot de passe. Ce lien est valable 48 ".
+                        "heures.</p> <p>Tant que vous n'avez pas changé le mot de passe, l'ancien ".
+                        "reste valable.</p>",
+                ),
+                "super.long = <p>Un email vous a été envoyé à l'adresse indiquée. Si vous ne le voyez pas dans votre boite au lettre d'ici quelques minutes, vérifiez votre dossier de spam. Si vous n'avez pas reçu le\\\n".
+                "mail, peut-être que le nom d'utilisateur et l'adresse que vous avez donné ne sont pas valides. Contactez l'administrateur du site web.</p> <p>Cet email contient un lien vers une page qui vous\\\n".
+                "permettra de changer de mot de passe. Ce lien est valable 48 heures.</p> <p>Tant que vous n'avez pas changé le mot de passe, l'ancien reste valable.</p>\n",
+                array("lineLength"=>200, "cutOnlyAtSpace"=>true)
+            ),
+
+
+
         );
     }
 
