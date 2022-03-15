@@ -8,7 +8,7 @@
 use Jelix\PropertiesFile\Writer;
 use Jelix\PropertiesFile\Properties;
 
-class writerTest extends PHPUnit_Framework_TestCase
+class writerTest extends \PHPUnit\Framework\TestCase
 {
     public function getPropertiesContent(){
         return array(

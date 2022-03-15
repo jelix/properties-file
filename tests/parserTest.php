@@ -8,7 +8,7 @@
 use Jelix\PropertiesFile\Parser;
 use Jelix\PropertiesFile\Properties;
 
-class parserTest extends PHPUnit_Framework_TestCase
+class parserTest extends \PHPUnit\Framework\TestCase
 {
     public function testUnknownFile(){
         try {
