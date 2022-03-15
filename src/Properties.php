@@ -76,6 +76,7 @@ class Properties implements \ArrayAccess
 
     // --------------------------- ArrayAccess interface
 
+    #[\ReturnTypeWillChange]
     public function offsetSet($key, $value)
     {
         if (is_null($key)) {
@@ -85,16 +86,19 @@ class Properties implements \ArrayAccess
         }
     }
 
+    #[\ReturnTypeWillChange]
     public function offsetExists($key)
     {
         return isset($this->properties[$key]);
     }
 
+    #[\ReturnTypeWillChange]
     public function offsetUnset($key)
     {
         unset($this->properties[$key]);
     }
 
+    #[\ReturnTypeWillChange]
     public function offsetGet($key)
     {
         return isset($this->properties[$key]) ? $this->properties[$key] : null;
