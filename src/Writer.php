@@ -1,7 +1,7 @@
 <?php
 /**
  * @author      Laurent Jouanneau
- * @copyright   2018 Laurent Jouanneau
+ * @copyright   2018-2022 Laurent Jouanneau
  *
  * @link        https://jelix.org
  * @licence     MIT
@@ -59,13 +59,11 @@ class Writer {
         }
 
         $equal = ($options["spaceAroundEqual"]? ' = ': '=');
-
+        $unbreakablespace = chr(0xc2).chr(160); // chr 160 in UTF-8
         foreach($properties->getIterator() as $key => $value) {
             $line = $key . $equal;
-
-
             $value = mb_ereg_replace("#", "\\#", $value);
-            $value = mb_ereg_replace(utf8_encode(chr(160)), "\\S", $value);
+            $value = mb_ereg_replace($unbreakablespace, "\\S", $value);
             $value = mb_ereg_replace("\n", "\\n", $value);
             if ($options["removeTrailingSpace"]) {
                 $value = rtrim($value, " ");

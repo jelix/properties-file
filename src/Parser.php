@@ -2,7 +2,7 @@
 /**
  * @author     Laurent Jouanneau
  * @contributor Gerald Croes, Julien Issler, Yannick Le Guédart, Dominique Papin
- * @copyright 2005-2018 Laurent Jouanneau, 2001-2005 CopixTeam, 2008 Julien Issler, 2008 Yannick Le Guédart, 2008 Dominique Papin
+ * @copyright 2005-2022 Laurent Jouanneau, 2001-2005 CopixTeam, 2008 Julien Issler, 2008 Yannick Le Guédart, 2008 Dominique Papin
  *
  * @link       https://jelix.org
  * @licence    MIT
@@ -60,7 +60,7 @@ class Parser
     protected function readContent(Properties $properties, callable $nextLine, $charset)
     {
         $utf8Mod = ($charset == 'UTF-8') ? 'u' : '';
-        $unbreakablespace = ($charset == 'UTF-8') ? utf8_encode(chr(160)) : chr(160);
+        $unbreakablespace = ($charset == 'UTF-8') ? chr(0xc2).chr(160) : chr(160);
         $escapedChars = array('\#', '\n', '\w', '\S', '\s');
         $unescape = array('#', "\n", ' ', $unbreakablespace, ' ');
         $multiline = false;

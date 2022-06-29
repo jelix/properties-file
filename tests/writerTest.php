@@ -36,7 +36,7 @@ class writerTest extends \PHPUnit\Framework\TestCase
                     "ee" => " ",
                     "ff" => "  # other",
                     "hh" => "    ",
-                    "ii" => "   ".utf8_encode(chr(160)).' bidule',
+                    "ii" => "   ".chr(0xc2).chr(160).' bidule',
                     "jj" => "truc "
                 ),
                 "html = lorem <ipsum>&\\#65; <html> &quote; test &gt;\n".
@@ -53,7 +53,7 @@ class writerTest extends \PHPUnit\Framework\TestCase
                     "ee" => " ",
                     "ff" => "  # other",
                     "hh" => "    ",
-                    "ii" => "   ".utf8_encode(chr(160)).' bidule',
+                    "ii" => "   ".chr(0xc2).chr(160).' bidule',
                     "jj" => "truc "
                 ),
                 "html = lorem <ipsum>&\\#65; <html> &quote; test &gt;\n".

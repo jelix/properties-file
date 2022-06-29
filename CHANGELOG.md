@@ -1,6 +1,11 @@
 Changelog
 ==========
 
+1.2.3 (2022-06-29)
+------------------
+
+Fix the use of the deprecated function `utf8_encode` for PHP 8.1
+
 1.2.2 (2022-03-15)
 ------------------
 

@@ -38,7 +38,7 @@ class parserTest extends \PHPUnit\Framework\TestCase
                 "ee" => " ",
                 "ff" => "  # other",
                 "hh" => "    ",
-                "ii" => "   ".utf8_encode(chr(160)).' bidule',
+                "ii" => "   ".chr(0xc2).chr(160).' bidule',
                 "jj" => "truc"
             )),
             array('test_H.properties', array("module.description" => "Tests unitaires # jelix", "ooo" => "bbbb",)),
